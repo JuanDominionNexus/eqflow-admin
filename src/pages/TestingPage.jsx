@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { sendTestPush, triggerWeeklyReports } from '../api/admin';
+import { sendTestPush, triggerWeeklyReports, seedProducts } from '../api/admin';
 
 export default function TestingPage() {
   const [pushTitle, setPushTitle] = useState('Your weekly report is ready');
@@ -12,6 +12,8 @@ export default function TestingPage() {
 
   const [cronStatus, setCronStatus] = useState(null);
   const [cronRunning, setCronRunning] = useState(false);
+  const [seedStatus, setSeedStatus] = useState(null);
+  const [seedRunning, setSeedRunning] = useState(false);
 
   const handleSendPush = async () => {
     setPushSending(true);
@@ -185,6 +187,42 @@ export default function TestingPage() {
           {cronStatus && (
             <div style={{ ...(cronStatus.type === 'success' ? styles.success : styles.error), marginTop: 12 }}>
               {cronStatus.message}
+            </div>
+          )}
+
+          <div style={{ ...styles.jobRow, marginTop: 20, paddingTop: 20, borderTop: '1px solid var(--border)' }}>
+            <div>
+              <div style={styles.jobTitle}>Seed Product Catalog</div>
+              <div style={styles.jobDesc}>
+                Re-seed all products and affiliate networks from the master catalog.
+              </div>
+            </div>
+            <button
+              onClick={async () => {
+                if (!window.confirm('Re-seed all products and affiliate networks?')) return;
+                setSeedRunning(true);
+                setSeedStatus(null);
+                try {
+                  await seedProducts();
+                  setSeedStatus({ type: 'success', message: 'Products seeded successfully' });
+                } catch (err) {
+                  setSeedStatus({ type: 'error', message: err.response?.data?.error || 'Failed to seed' });
+                } finally {
+                  setSeedRunning(false);
+                }
+              }}
+              disabled={seedRunning}
+              style={{
+                ...styles.triggerBtn,
+                ...(seedRunning ? styles.sendBtnDisabled : {}),
+              }}
+            >
+              {seedRunning ? 'Seeding...' : 'Seed Now'}
+            </button>
+          </div>
+          {seedStatus && (
+            <div style={{ ...(seedStatus.type === 'success' ? styles.success : styles.error), marginTop: 12 }}>
+              {seedStatus.message}
             </div>
           )}
         </div>

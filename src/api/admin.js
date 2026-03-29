@@ -69,6 +69,9 @@ export const sendTestPush = (payload = {}) =>
 export const triggerWeeklyReports = () =>
   client.post('/admin/narrative-reports/generate').then(r => r.data);
 
+export const seedProducts = () =>
+  client.post('/admin/seed-products').then(r => r.data);
+
 // ── Revenue Pipeline & Funnel ──
 export const getRevenuePipeline = (days = 30) =>
   client.get('/admin/revenue-pipeline', { params: { days } }).then(r => r.data);
