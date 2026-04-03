@@ -6,10 +6,10 @@ const EMAIL_TEMPLATE_BEFORE = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background-color:#0f1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto','Helvetica','Arial',sans-serif;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td align="center" style="padding:40px 20px;">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;background-color:#1a1b2e;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
-<tr><td style="background:linear-gradient(135deg,#4ECDC4 0%,#9B87F5 50%,#FFB86C 100%);padding:48px 40px;text-align:center;">
-<div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#8B5CF6 0%,#F59E0B 100%);margin:0 auto;line-height:64px;text-align:center;">
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" style="vertical-align:middle;"><path d="M256 448a32.85 32.85 0 0 1-22.62-9.06L60.7 265.75a135.64 135.64 0 0 1 0-186.33 126.64 126.64 0 0 1 180.41 0l14.89 15 14.89-15a126.64 126.64 0 0 1 180.41 0 135.64 135.64 0 0 1 0 186.33L278.62 438.94A32.85 32.85 0 0 1 256 448z" fill="#ffffff"/></svg>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;background-color:#111120;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+<tr><td style="background:linear-gradient(135deg,#1a1825 0%,#0A0A14 50%,#1a1825 100%);padding:48px 40px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.2);">
+<div style="width:64px;height:64px;border-radius:50%;border:1px solid rgba(201,168,76,0.25);margin:0 auto;line-height:64px;text-align:center;">
+<span style="font-size:28px;line-height:64px;color:#C9A84C;">&#x2726;</span>
 </div>
 <h1 style="margin:24px 0 0;font-size:32px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">EQ Flow</h1>
 </td></tr>
@@ -20,7 +20,7 @@ const EMAIL_TEMPLATE_AFTER = `</td></tr>
 <p style="margin:0 0 16px;font-size:13px;line-height:20px;color:rgba(255,255,255,0.4);">You're receiving this because you have an EQ Flow account.</p>
 <p style="margin:0 0 16px;font-size:13px;color:rgba(255,255,255,0.4);"><a href="#" style="color:rgba(255,255,255,0.5);text-decoration:underline;">Unsubscribe</a></p>
 <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);">
-<p style="margin:0;font-size:13px;color:rgba(255,255,255,0.4);">Made with \u2764\uFE0F by EQ Flow</p>
+<p style="margin:0;font-size:13px;color:rgba(255,255,255,0.4);">\u2726 EQ Flow by Astrolabe Labs</p>
 <p style="margin:8px 0 0;font-size:12px;color:rgba(255,255,255,0.3);">\u00A9 ${new Date().getFullYear()} Astrolabe Labs LLC. All rights reserved.</p>
 </div></td></tr>
 </table></td></tr></table></body></html>`;
@@ -29,7 +29,7 @@ const LEGAL_TEMPLATE_AFTER = `</td></tr>
 <tr><td style="padding:32px 40px;background-color:rgba(0,0,0,0.2);text-align:center;">
 <p style="margin:0 0 16px;font-size:13px;line-height:20px;color:rgba(255,255,255,0.4);">You're receiving this because you have an EQ Flow account. This is a required legal notice.</p>
 <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);">
-<p style="margin:0;font-size:13px;color:rgba(255,255,255,0.4);">Made with \u2764\uFE0F by EQ Flow</p>
+<p style="margin:0;font-size:13px;color:rgba(255,255,255,0.4);">\u2726 EQ Flow by Astrolabe Labs</p>
 <p style="margin:8px 0 0;font-size:12px;color:rgba(255,255,255,0.3);">\u00A9 ${new Date().getFullYear()} Astrolabe Labs LLC. All rights reserved.</p>
 </div></td></tr>
 </table></td></tr></table></body></html>`;
