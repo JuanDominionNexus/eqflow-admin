@@ -8,9 +8,7 @@ const EMAIL_TEMPLATE_BEFORE = `<!DOCTYPE html>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td align="center" style="padding:40px 20px;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;background-color:#111120;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
 <tr><td style="background:linear-gradient(135deg,#1a1825 0%,#0A0A14 50%,#1a1825 100%);padding:48px 40px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.2);">
-<div style="width:64px;height:64px;border-radius:50%;border:1px solid rgba(201,168,76,0.25);margin:0 auto;line-height:64px;text-align:center;">
-<span style="font-size:28px;line-height:64px;color:#C9A84C;">&#x2726;</span>
-</div>
+<img src="https://eqflow.app/icon.png" alt="EQ Flow" width="64" height="64" style="width:64px;height:64px;border-radius:16px;margin:0 auto;display:block;" />
 <h1 style="margin:24px 0 0;font-size:32px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">EQ Flow</h1>
 </td></tr>
 <tr><td style="padding:48px 40px;color:#ffffff;">`;
