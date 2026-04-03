@@ -54,7 +54,7 @@ export default function OverviewPage() {
         <MetricCard label="Total Users" value={data?.totalUsers?.toLocaleString()} color="var(--text-primary)" />
         <MetricCard label="Signups This Week" value={data?.signupsThisWeek} color="var(--accent-teal)" change={data?.signupWoW} />
         <MetricCard label="DAU" value={data?.dau?.toLocaleString()} subValue={`Yesterday: ${data?.dauYesterday ?? '—'}`} color="var(--accent-blue)" />
-        <MetricCard label="DNA Uploads" value={dnaUploads} subValue={`${dnaConfirmed} confirmed`} color="var(--accent-purple)" />
+        <MetricCard label="DNA Scans" value={dnaUploads} subValue={`${dnaConfirmed} confirmed`} color="var(--accent-purple)" />
       </div>
 
       {/* Charts */}

@@ -70,7 +70,7 @@ export default function DnaUploadsPage() {
       fd.append('file', file);
       fd.append('user_id', selectedUser.id);
       await uploadDnaFile(fd);
-      setSuccess(`DNA file uploaded for ${selectedUser.name}`);
+      setSuccess(`DNA scan uploaded for ${selectedUser.name}`);
       setFile(null);
       setSelectedUser(null);
       setUserSearch('');
@@ -90,12 +90,12 @@ export default function DnaUploadsPage() {
 
   return (
     <div>
-      <h1 style={styles.title}>DNA Uploads</h1>
+      <h1 style={styles.title}>DNA Scans</h1>
 
       {/* Stats */}
       <div style={styles.statsRow}>
         <div style={styles.statCard}>
-          <div style={styles.statLabel}>Total Uploads</div>
+          <div style={styles.statLabel}>Total Scans</div>
           <div style={{ ...styles.statValue, color: 'var(--accent-purple)' }}>{stats?.total ?? 0}</div>
         </div>
         <div style={styles.statCard}>
@@ -110,7 +110,7 @@ export default function DnaUploadsPage() {
 
       {/* Upload section */}
       <div style={styles.section}>
-        <h2 style={styles.sectionTitle}>Upload DNA File</h2>
+        <h2 style={styles.sectionTitle}>Upload DNA Scan</h2>
 
         <div style={styles.fieldGroup}>
           <label style={styles.fieldLabel}>User</label>
@@ -180,7 +180,7 @@ export default function DnaUploadsPage() {
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 24, marginBottom: 8, color: 'var(--text-muted)' }}>&#8593;</div>
                 <div style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
-                  Drop DNA file here or click to browse
+                  Drop DNA scan here or click to browse
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
                   .txt, .csv, .zip accepted
@@ -202,17 +202,17 @@ export default function DnaUploadsPage() {
             cursor: (!file || !selectedUser || uploading) ? 'not-allowed' : 'pointer',
           }}
         >
-          {uploading ? 'Uploading...' : 'Upload DNA'}
+          {uploading ? 'Uploading...' : 'Upload Scan'}
         </button>
       </div>
 
       {/* Uploads table */}
       <div style={styles.section}>
-        <h2 style={styles.sectionTitle}>All Uploads</h2>
+        <h2 style={styles.sectionTitle}>All Scans</h2>
         {loading ? (
           <div style={styles.empty}>Loading...</div>
         ) : uploads.length === 0 ? (
-          <div style={styles.empty}>No DNA uploads yet</div>
+          <div style={styles.empty}>No DNA scans yet</div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={styles.table}>

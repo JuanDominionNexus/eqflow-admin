@@ -17,7 +17,7 @@ import BroadcastPage from './pages/BroadcastPage';
 import NarrativeReportsPage from './pages/NarrativeReportsPage';
 import TestingPage from './pages/TestingPage';
 import ProductsPage from './pages/ProductsPage';
-import DnaUploadsPage from './pages/DnaUploadsPage';
+import DnaScansPage from './pages/DnaScansPage';
 
 function ProtectedRoute({ children }) {
   const { token, loading } = useAuth();
@@ -62,7 +62,7 @@ function AppRoutes() {
       <Route path="/broadcast" element={<BroadcastPage />} />
       <Route path="/testing" element={<TestingPage />} />
       <Route path="/products" element={<ProductsPage />} />
-      <Route path="/dna" element={<DnaUploadsPage />} />
+      <Route path="/dna" element={<DnaScansPage />} />
       <Route path="/portal" element={<TherapistPortalPage />} />
       <Route path="/portal/client/:id" element={<ClientDetailPage />} />
       <Route path="*" element={<DefaultRedirect />} />
