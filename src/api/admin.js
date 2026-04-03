@@ -78,6 +78,12 @@ export const getRevenuePipeline = (days = 30) =>
 export const getFunnelEvents = (days = 30) =>
   client.get('/admin/funnel-events', { params: { days } }).then(r => r.data);
 
+// ── DNA Uploads ──
+export const getDnaUploads = () =>
+  client.get('/admin/dna-uploads').then(r => r.data);
+export const uploadDnaFile = (formData) =>
+  client.post('/admin/dna-uploads', formData).then(r => r.data);
+
 // ── Products & Affiliate Networks ──
 export const getProducts = (params) =>
   client.get('/admin/products', { params }).then(r => r.data);

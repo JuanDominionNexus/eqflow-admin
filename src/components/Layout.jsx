@@ -15,6 +15,7 @@ const ADMIN_NAV = [
   { path: '/therapists', label: 'Therapists', icon: '✚' },
   { path: '/broadcast', label: 'Broadcast', icon: '✉' },
   { path: '/testing', label: 'Testing', icon: '▶' },
+  { path: '/dna', label: 'DNA Uploads', icon: '◈' },
   { path: '/products', label: 'Products', icon: '▣' },
 ];
 

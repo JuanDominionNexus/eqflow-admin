@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getOverview, getSignups, getRevenuePipeline, getFunnelEvents } from '../api/admin';
+import { getOverview, getSignups, getFunnelEvents } from '../api/admin';
 import MetricCard from '../components/MetricCard';
 import TrendChart from '../components/TrendChart';
 import DateRangePicker from '../components/DateRangePicker';
@@ -14,7 +14,6 @@ export default function OverviewPage() {
   const [days, setDays] = useState(30);
   const [data, setData] = useState(null);
   const [signups, setSignups] = useState(null);
-  const [revenue, setRevenue] = useState(null);
   const [funnelEvents, setFunnelEvents] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -24,10 +23,9 @@ export default function OverviewPage() {
     Promise.all([
       getOverview(days),
       getSignups(days),
-      getRevenuePipeline(days).catch(() => null),
       getFunnelEvents(days).catch(() => null),
     ])
-      .then(([o, s, r, f]) => { setData(o); setSignups(s); setRevenue(r); setFunnelEvents(f); })
+      .then(([o, s, f]) => { setData(o); setSignups(s); setFunnelEvents(f); })
       .finally(() => setLoading(false));
   }, [days]);
 
@@ -40,7 +38,9 @@ export default function OverviewPage() {
   const checkInPct = funnelSignups > 0 ? ((funnelCheckIn / funnelSignups) * 100).toFixed(1) : 0;
   const retainedPct = funnelSignups > 0 ? ((funnelRetained / funnelSignups) * 100).toFixed(1) : 0;
 
-  const recentSignups = signups?.recent?.slice(0, 10) || [];
+  const recentSignups = signups?.recent?.slice(0, 5) || [];
+  const dnaUploads = parseInt(funnelEvents?.dna_upload || 0);
+  const dnaConfirmed = parseInt(funnelEvents?.dna_confirmed || 0);
 
   return (
     <div>
@@ -49,88 +49,32 @@ export default function OverviewPage() {
         <DateRangePicker value={days} onChange={setDays} />
       </div>
 
-      {/* Signup metrics */}
+      {/* Key metrics */}
       <div style={styles.cards}>
         <MetricCard label="Total Users" value={data?.totalUsers?.toLocaleString()} color="var(--text-primary)" />
         <MetricCard label="Signups This Week" value={data?.signupsThisWeek} color="var(--accent-teal)" change={data?.signupWoW} />
-        <MetricCard label="Signups This Month" value={data?.signupsThisMonth} color="var(--accent-blue)" change={data?.signupMoM} />
-        <MetricCard label="Signups Today" value={data?.signupsToday} color="var(--accent-amber)" />
+        <MetricCard label="DAU" value={data?.dau?.toLocaleString()} subValue={`Yesterday: ${data?.dauYesterday ?? '—'}`} color="var(--accent-blue)" />
+        <MetricCard label="DNA Uploads" value={dnaUploads} subValue={`${dnaConfirmed} confirmed`} color="var(--accent-purple)" />
       </div>
 
-      {/* Activity metrics */}
-      <div style={styles.cards}>
-        <MetricCard label="DAU" value={data?.dau?.toLocaleString()} subValue={`Yesterday: ${data?.dauYesterday ?? '—'}`} color="var(--accent-teal)" />
-        <MetricCard label="WAU" value={data?.wau?.toLocaleString()} subValue={`Last week: ${data?.wauLastWeek ?? '—'}`} color="var(--accent-blue)" />
-        <MetricCard label="MAU" value={data?.mau?.toLocaleString()} color="var(--accent-amber)" />
-      </div>
-
-      {/* Platform breakdown */}
-      {data?.platformBreakdown?.length > 0 && (
-        <div style={styles.cards}>
-          {data.platformBreakdown.map((p) => {
-            const label = p.platform === 'ios' ? 'iOS App' : p.platform === 'android' ? 'Android App' : 'Web';
-            const color = p.platform === 'ios' ? '#0ea5e9' : p.platform === 'android' ? '#22c55e' : 'var(--accent-teal)';
-            const hrs = Math.round(parseInt(p.total_seconds) / 3600);
-            return (
-              <MetricCard
-                key={p.platform}
-                label={label}
-                value={`${parseInt(p.unique_users)} users`}
-                subValue={`${parseInt(p.sessions)} sessions · ${hrs}h total`}
-                color={color}
-              />
-            );
-          })}
+      {/* Charts */}
+      <div style={styles.row}>
+        <div style={{ ...styles.section, flex: 1 }}>
+          <h2 style={styles.sectionTitle}>Signups</h2>
+          <TrendChart
+            data={data?.signupTrend}
+            lines={[{ key: 'count', name: 'Signups', color: 'teal' }]}
+            type="area"
+          />
         </div>
-      )}
-
-      {/* Platform totals */}
-      <div style={styles.cards}>
-        <MetricCard label="Total Check-ins" value={data?.platformTotals?.totalCheckIns?.toLocaleString()} color="var(--accent-teal)" />
-        <MetricCard label="Total Journals" value={data?.platformTotals?.totalJournals?.toLocaleString()} color="var(--accent-blue)" />
-        <MetricCard
-          label="Meditations"
-          value={data?.platformTotals?.totalMeditations?.toLocaleString()}
-          subValue={`${data?.platformTotals?.completedMeditations?.toLocaleString() ?? '—'} completed`}
-          color="var(--accent-amber)"
-        />
-      </div>
-
-      <div style={styles.cards}>
-        <MetricCard
-          label="Total Time Active"
-          value={data?.platformTotals?.totalActiveSeconds ? `${Math.round(data.platformTotals.totalActiveSeconds / 3600)}h` : '—'}
-          subValue={data?.platformTotals?.totalActiveSeconds ? `${Math.round(data.platformTotals.totalActiveSeconds / 60).toLocaleString()} min` : undefined}
-          color="var(--text-primary)"
-        />
-        <MetricCard
-          label="Time Meditating"
-          value={data?.platformTotals?.totalMeditationSeconds ? `${Math.round(data.platformTotals.totalMeditationSeconds / 3600)}h` : '—'}
-          subValue={data?.platformTotals?.totalMeditationSeconds ? `${Math.round(data.platformTotals.totalMeditationSeconds / 60).toLocaleString()} min` : undefined}
-          color="var(--accent-amber)"
-        />
-      </div>
-
-      {/* Circles & Deletions */}
-      <div style={styles.cards}>
-        <MetricCard
-          label="Circles"
-          value={data?.circles?.total}
-          subValue={`${data?.circles?.active ?? '—'} active · ${data?.circles?.totalMembers ?? '—'} members`}
-          color="var(--accent-blue)"
-        />
-        <MetricCard
-          label="Account Deletions"
-          value={data?.deletions?.total}
-          subValue={`This month: ${data?.deletions?.thisMonth ?? 0} · Last: ${data?.deletions?.lastMonth ?? 0}`}
-          color="#ef4444"
-        />
-        <MetricCard
-          label="Export Before Delete"
-          value={data?.deletions?.dataExportedRate != null ? `${data.deletions.dataExportedRate}%` : '—'}
-          subValue={data?.deletions?.avgAccountAgeDays ? `Avg account age: ${data.deletions.avgAccountAgeDays}d` : undefined}
-          color="var(--text-secondary)"
-        />
+        <div style={{ ...styles.section, flex: 1 }}>
+          <h2 style={styles.sectionTitle}>Daily Active Users</h2>
+          <TrendChart
+            data={data?.dauTrend}
+            lines={[{ key: 'dau', name: 'DAU', color: 'blue' }]}
+            type="area"
+          />
+        </div>
       </div>
 
       {/* Conversion funnel */}
@@ -158,27 +102,6 @@ export default function OverviewPage() {
           </div>
         </div>
       )}
-
-      {/* Charts */}
-      <div style={styles.row}>
-        <div style={{ ...styles.section, flex: 1 }}>
-          <h2 style={styles.sectionTitle}>Signups</h2>
-          <TrendChart
-            data={data?.signupTrend}
-            lines={[{ key: 'count', name: 'Signups', color: 'teal' }]}
-            type="area"
-          />
-        </div>
-
-        <div style={{ ...styles.section, flex: 1 }}>
-          <h2 style={styles.sectionTitle}>Daily Active Users</h2>
-          <TrendChart
-            data={data?.dauTrend}
-            lines={[{ key: 'dau', name: 'DAU', color: 'blue' }]}
-            type="area"
-          />
-        </div>
-      </div>
 
       {/* Recent signups */}
       <div style={styles.section}>
@@ -232,91 +155,6 @@ export default function OverviewPage() {
             <div style={styles.empty}>No signups yet</div>
           )}
         </div>
-
-      {/* Revenue Pipeline */}
-      <div style={styles.section}>
-          <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>Revenue Pipeline</h2>
-          </div>
-          <div style={styles.cards}>
-            <MetricCard
-              label="Total Clicks"
-              value={revenue?.daily?.reduce((sum, d) => sum + parseInt(d.clicks || 0), 0) || 0}
-              color="var(--accent-teal)"
-            />
-            <MetricCard
-              label="Premium Clicks"
-              value={revenue?.daily?.reduce((sum, d) => sum + parseInt(d.premium_clicks || 0), 0) || 0}
-              color="var(--accent-green)"
-            />
-            <MetricCard
-              label="Amazon Fallback"
-              value={revenue?.daily?.reduce((sum, d) => sum + parseInt(d.amazon_clicks || 0), 0) || 0}
-              color="var(--accent-amber)"
-            />
-            <MetricCard
-              label="Combo Clicks"
-              value={revenue?.daily?.reduce((sum, d) => sum + parseInt(d.combo_clicks || 0), 0) || 0}
-              color="var(--accent-purple)"
-            />
-          </div>
-          {revenue?.networkSplit?.length > 0 && (
-            <div style={{ marginTop: 16 }}>
-              <h3 style={{ ...styles.sectionTitle, fontSize: 13, marginBottom: 8 }}>Clicks by Network</h3>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {revenue?.networkSplit.map(n => (
-                  <span key={n.network} style={styles.badge}>
-                    {n.network}: {n.clicks}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          {revenue?.topProducts?.length > 0 && (
-            <div style={{ marginTop: 16 }}>
-              <h3 style={{ ...styles.sectionTitle, fontSize: 13, marginBottom: 8 }}>Top Clicked Products</h3>
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.th}>Product</th>
-                    <th style={styles.th}>Brand</th>
-                    <th style={styles.th}>Network</th>
-                    <th style={{ ...styles.th, textAlign: 'right' }}>Clicks</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {revenue?.topProducts.slice(0, 10).map((p, i) => (
-                    <tr key={i} style={styles.tr}>
-                      <td style={styles.td}>{p.product_key}</td>
-                      <td style={styles.td}>{p.brand || '—'}</td>
-                      <td style={styles.td}><span style={styles.badge}>{p.network || '—'}</span></td>
-                      <td style={{ ...styles.td, textAlign: 'right' }}>{p.clicks}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-      </div>
-
-      {/* Funnel Events */}
-      <div style={styles.section}>
-          <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>Conversion Funnel ({days}d)</h2>
-          </div>
-          <div style={styles.cards}>
-            <MetricCard label="Signups" value={parseInt(funnelEvents?.signups || 0)} color="var(--accent-teal)" />
-            <MetricCard label="First Check-in" value={parseInt(funnelEvents?.checkin_complete || 0)} color="var(--accent-blue)" />
-            <MetricCard label="DNA Upload" value={parseInt(funnelEvents?.dna_upload || 0)} color="var(--accent-purple)" />
-            <MetricCard label="DNA Confirmed" value={parseInt(funnelEvents?.dna_confirmed || 0)} color="var(--accent-green)" />
-            <MetricCard label="Supplement Reveal" value={parseInt(funnelEvents?.supplement_reveal || 0)} color="var(--accent-amber)" />
-            <MetricCard label="First Pill Tracked" value={parseInt(funnelEvents?.first_pill || 0)} color="var(--accent-red)" />
-          </div>
-          <div style={{ ...styles.cards, marginTop: 12 }}>
-            <MetricCard label="Meditations" value={parseInt(funnelEvents?.meditations || 0)} color="var(--accent-teal)" />
-            <MetricCard label="Journals" value={parseInt(funnelEvents?.journals || 0)} color="var(--accent-blue)" />
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -335,7 +173,7 @@ const styles = {
     display: 'flex',
     gap: 16,
     flexWrap: 'wrap',
-    marginBottom: 16,
+    marginBottom: 24,
   },
   row: {
     display: 'flex',
