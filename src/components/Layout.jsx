@@ -16,7 +16,7 @@ const ADMIN_NAV = [
   { path: '/broadcast', label: 'Broadcast', icon: '✉' },
   { path: '/testing', label: 'Testing', icon: '▶' },
   { path: '/dna', label: 'DNA Scans', icon: '◈' },
-  { path: '/products', label: 'Products', icon: '▣' },
+  { path: '/supplements', label: 'Supplements', icon: '▣' },
 ];
 
 function getTherapistNav(status) {

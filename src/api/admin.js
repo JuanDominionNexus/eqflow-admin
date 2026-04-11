@@ -108,3 +108,19 @@ export const createAffiliateNetwork = (data) =>
   client.post('/admin/affiliate-networks', data).then(r => r.data);
 export const updateAffiliateNetwork = (id, data) =>
   client.put(`/admin/affiliate-networks/${id}`, data).then(r => r.data);
+
+// ── Supplement Catalog ──
+export const getSupplements = () =>
+  client.get('/admin/supplements').then(r => r.data);
+export const getSupplement = (key) =>
+  client.get(`/admin/supplements/${key}`).then(r => r.data);
+export const updateSupplement = (key, data) =>
+  client.put(`/admin/supplements/${key}`, data).then(r => r.data);
+export const addProductOption = (supplementKey, data) =>
+  client.post(`/admin/supplements/${supplementKey}/options`, data).then(r => r.data);
+export const updateProductOption = (id, data) =>
+  client.put(`/admin/product-options/${id}`, data).then(r => r.data);
+export const deleteProductOption = (id) =>
+  client.delete(`/admin/product-options/${id}`).then(r => r.data);
+export const seedSupplements = () =>
+  client.post('/admin/seed-supplements').then(r => r.data);

@@ -16,7 +16,7 @@ import AIAnalyticsPage from './pages/AIAnalyticsPage';
 import BroadcastPage from './pages/BroadcastPage';
 import NarrativeReportsPage from './pages/NarrativeReportsPage';
 import TestingPage from './pages/TestingPage';
-import ProductsPage from './pages/ProductsPage';
+import SupplementsPage from './pages/SupplementsPage';
 import DnaScansPage from './pages/DnaScansPage';
 
 function ProtectedRoute({ children }) {
@@ -61,7 +61,7 @@ function AppRoutes() {
       <Route path="/narrative-reports" element={<NarrativeReportsPage />} />
       <Route path="/broadcast" element={<BroadcastPage />} />
       <Route path="/testing" element={<TestingPage />} />
-      <Route path="/products" element={<ProductsPage />} />
+      <Route path="/supplements" element={<SupplementsPage />} />
       <Route path="/dna" element={<DnaScansPage />} />
       <Route path="/portal" element={<TherapistPortalPage />} />
       <Route path="/portal/client/:id" element={<ClientDetailPage />} />
